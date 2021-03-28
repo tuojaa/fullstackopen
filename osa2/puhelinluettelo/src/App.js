@@ -8,7 +8,7 @@ const Notification = ({ message }) => {
     )
   }
   return (
-    <div class={"notification "+message.type}>{message.text}</div>
+    <div className={"notification "+message.type}>{message.text}</div>
   )
 }
 
@@ -65,8 +65,8 @@ const App = () => {
     }, 5000)    
   }
 
-  const notifySuccess = (text) => notify('success', text)
-  const notifyError = (text) => notify('error', text)
+  const notifySuccess = (text) => { notify('success', text) }
+  const notifyError = (text) => { notify('error', text) }
 
   const [persons, setPersons] = useState([])
 
@@ -137,7 +137,7 @@ const App = () => {
         notifyError("Tietojen haku epäonnistui!")
         console.log("getAllPersons failed", error)
       })
-  }, [])
+  })
 
   const deletePerson = (id) => {
     personService.deletePerson(id)
