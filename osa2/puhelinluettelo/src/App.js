@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import personService from './services/persons'
 
 const Notification = ({ message }) => {
@@ -22,7 +22,7 @@ const Person = ({ person, deleteClicked }) => {
 
 const Phonebook = (props) => {
   const filteredPersons = props.persons.filter(
-    person => (person.name.toUpperCase().indexOf(props.filter.toUpperCase()) !== -1)
+    person => (person.name.toUpperCase().indexOf(props.filterBy.toUpperCase()) !== -1)
   )
   return (
     <div>
@@ -65,8 +65,8 @@ const App = () => {
     }, 5000)    
   }
 
-  const notifySuccess = (text) => { notify('success', text) }
-  const notifyError = (text) => { notify('error', text) }
+  const notifySuccess = useCallback((text) => { notify('success', text) }, [])
+  const notifyError = useCallback((text) => { notify('error', text) }, [])
 
   const [persons, setPersons] = useState([])
 
@@ -109,7 +109,7 @@ const App = () => {
     }
 
     personService.createPerson(personObject)
-      .then(response => {        
+      .then(response => {  
         setPersons(persons.concat(response.data))    
         setNewName('')
         setNewNumber('')    
@@ -128,6 +128,7 @@ const App = () => {
   }
 
   useEffect(() => {
+    console.log("get all persons")
     personService.getAllPersons()
       .then(response => {        
         setPersons(response.data)
@@ -137,7 +138,7 @@ const App = () => {
         notifyError("Tietojen haku epäonnistui!")
         console.log("getAllPersons failed", error)
       })
-  })
+  }, [])
 
   const deletePerson = (id) => {
     personService.deletePerson(id)
@@ -164,7 +165,7 @@ const App = () => {
         newName={newName} 
         newNumber={newNumber}/>
       <h2>Numbers</h2>
-      <Phonebook persons={persons} filter={filterBy} deletePerson={deletePerson} />
+      <Phonebook persons={persons} filterBy={filterBy} deletePerson={deletePerson} />
     </div>
   )
 
