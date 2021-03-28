@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import personService from './services/persons'
 
-const Person = ({ person }) => {
+const Person = ({ person, deleteClicked }) => {
   return (
     <p>
-      {person.name}  {person.number}
+      {person.name}  {person.number} <button onClick={deleteClicked}>delete</button>
     </p>
   )
 }
@@ -15,7 +15,7 @@ const Phonebook = (props) => {
   )
   return (
     <div>
-      {filteredPersons.map(person => (<Person key={person.name} person={person} />))}
+      {filteredPersons.map(person => (<Person key={person.name} person={person} deleteClicked={() => props.deletePerson(person.id)} />))}
     </div>
   )
 }
@@ -62,18 +62,38 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault()
 
-    if(persons.findIndex(person => (person.name===newName)) !== -1) {
-      alert(`${newName} is already added to phonebook`)
-      return
-    }
-
     const personObject = {
       name: newName,      
       number: newNumber,
     }    
-    setPersons(persons.concat(personObject))
-    setNewName('')
-    setNewNumber('')
+
+    const existingIndex = persons.findIndex(person => (person.name===newName))
+
+    if(existingIndex !== -1) {      
+      personService.updatePerson(persons[existingIndex].id, personObject)
+        .then(response => {
+          const newPersons = [...persons]
+          newPersons[existingIndex] = personObject
+          setPersons(newPersons)
+        })
+        .catch(error => {
+          alert("Tietojen päivitys epäonnistui")
+          console.log("updatePerson failed", error)      
+        })
+    
+      return
+    }
+
+    personService.createPerson(personObject)
+      .then(response => {        
+        setPersons(persons.concat(response.data))    
+        setNewName('')
+        setNewNumber('')    
+      })
+      .catch(error => {
+        alert("Tietojen tallennus epäonnistui")
+        console.log("createPerson failed", error)
+      })
   }
 
   const [ filterBy, setFilterBy ] = useState('')
@@ -83,13 +103,22 @@ const App = () => {
   }
 
   useEffect(() => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
+    personService.getAllPersons()
       .then(response => {        
         setPersons(response.data)
       })
+      .catch(error => {
+        alert("Tietojen haku epäonnistui!")
+        console.log("getAllPersons failed", error)
+      })
   }, [])
+
+  const deletePerson = (id) => {
+    personService.deletePerson(id)
+      .then(response => {
+        setPersons(persons.filter((person) => (person.id!==id)))
+      })
+  }
 
   return (
     <div>
@@ -103,7 +132,7 @@ const App = () => {
         newName={newName} 
         newNumber={newNumber}/>
       <h2>Numbers</h2>
-      <Phonebook persons={persons} filter={filterBy}/>
+      <Phonebook persons={persons} filter={filterBy} deletePerson={deletePerson} />
     </div>
   )
 
