@@ -1,6 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import personService from './services/persons'
 
+const Notification = ({ message }) => {
+  if (!message) {
+    return (
+      <></>
+    )
+  }
+  return (
+    <div class={"notification "+message.type}>{message.text}</div>
+  )
+}
+
 const Person = ({ person, deleteClicked }) => {
   return (
     <p>
@@ -45,6 +56,18 @@ const Filter = (props) => {
 }
 
 const App = () => {
+  const [notification, setNotification] = useState(null)
+
+  const notify = (type, text) => {
+    setNotification({ type, text })
+    setTimeout(() => {
+      setNotification(null)
+    }, 5000)    
+  }
+
+  const notifySuccess = (text) => notify('success', text)
+  const notifyError = (text) => notify('error', text)
+
   const [persons, setPersons] = useState([])
 
   const [ newName, setNewName ] = useState('')
@@ -75,9 +98,10 @@ const App = () => {
           const newPersons = [...persons]
           newPersons[existingIndex] = personObject
           setPersons(newPersons)
+          notifySuccess(`Tietojen päivitys onnistui: ${response.data.name}`)
         })
         .catch(error => {
-          alert("Tietojen päivitys epäonnistui")
+          notifyError("Tietojen päivitys epäonnistui")
           console.log("updatePerson failed", error)      
         })
     
@@ -89,9 +113,10 @@ const App = () => {
         setPersons(persons.concat(response.data))    
         setNewName('')
         setNewNumber('')    
+        notifySuccess(`Tietojen lisääminen onnistui: ${response.data.name}`)
       })
       .catch(error => {
-        alert("Tietojen tallennus epäonnistui")
+        notifyError("Tietojen tallennus epäonnistui")
         console.log("createPerson failed", error)
       })
   }
@@ -106,9 +131,10 @@ const App = () => {
     personService.getAllPersons()
       .then(response => {        
         setPersons(response.data)
+        notifySuccess("Tietojen haku onnistui")
       })
       .catch(error => {
-        alert("Tietojen haku epäonnistui!")
+        notifyError("Tietojen haku epäonnistui!")
         console.log("getAllPersons failed", error)
       })
   }, [])
@@ -117,11 +143,17 @@ const App = () => {
     personService.deletePerson(id)
       .then(response => {
         setPersons(persons.filter((person) => (person.id!==id)))
+        notifySuccess("Tietojen poisto onnistui")
+      })
+      .catch(error => {
+        notifyError("Tietojen poisto epäonnistui!")
+        console.log("deletePerson failed", error)
       })
   }
 
   return (
     <div>
+      <Notification message={notification}/>
       <h2>Phonebook</h2>
       <Filter handleFilterBy={handleFilterBy} filterBy={filterBy}/>
       <h2>Add new</h2>
