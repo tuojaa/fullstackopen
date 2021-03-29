@@ -10,10 +10,12 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
-const mongoUrl =
-  `mongodb+srv://tuomasjaanu:${config.MONGO_PASSWORD}@cluster0.dbkdb.mongodb.net/blogilista?retryWrites=true&w=majority`
-console.log(mongoUrl)
-mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
+mongoose.connect(config.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex: true
+})
 
 app.use('/api/blogs', blogRouter)
 
