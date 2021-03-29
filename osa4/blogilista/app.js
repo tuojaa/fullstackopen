@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 
 const blogRouter = require('./controllers/blog')
 const config = require('./utils/config')
-
+const { errorHandler } = require('./utils/middleware')
 const app = express()
 
 app.use(cors())
@@ -16,5 +16,7 @@ console.log(mongoUrl)
 mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
 
 app.use('/api/blogs', blogRouter)
+
+app.use(errorHandler)
 
 module.exports = app
