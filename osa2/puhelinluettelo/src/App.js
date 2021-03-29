@@ -94,14 +94,14 @@ const App = () => {
 
     if(existingIndex !== -1) {      
       personService.updatePerson(persons[existingIndex].id, personObject)
-        .then(response => {
+        .then(response => {          
           const newPersons = [...persons]
-          newPersons[existingIndex] = personObject
+          newPersons[existingIndex] = response.data
           setPersons(newPersons)
           notifySuccess(`Tietojen päivitys onnistui: ${response.data.name}`)
         })
         .catch(error => {
-          notifyError("Tietojen päivitys epäonnistui")
+          notifyError("Tietojen päivitys epäonnistui: "+(error.response)?(error.response.data.reason):(error.message))
           console.log("updatePerson failed", error)      
         })
     
@@ -116,7 +116,7 @@ const App = () => {
         notifySuccess(`Tietojen lisääminen onnistui: ${response.data.name}`)
       })
       .catch(error => {
-        notifyError("Tietojen tallennus epäonnistui")
+        notifyError("Tietojen tallennus epäonnistui: "+(error.response)?(error.response.data.reason):(error.message))
         console.log("createPerson failed", error)
       })
   }
@@ -135,7 +135,7 @@ const App = () => {
         notifySuccess("Tietojen haku onnistui")
       })
       .catch(error => {
-        notifyError("Tietojen haku epäonnistui!")
+        notifyError("Tietojen haku epäonnistui: "+(error.response)?(error.response.data.reason):(error.message))
         console.log("getAllPersons failed", error)
       })
   }, [])
@@ -147,7 +147,7 @@ const App = () => {
         notifySuccess("Tietojen poisto onnistui")
       })
       .catch(error => {
-        notifyError("Tietojen poisto epäonnistui!")
+        notifyError("Tietojen poisto epäonnistui: "+(error.response)?(error.response.data.reason):(error.message))
         console.log("deletePerson failed", error)
       })
   }
