@@ -138,7 +138,7 @@ const App = () => {
         notifyError("Tietojen haku epäonnistui: "+(error.response)?(error.response.data.reason):(error.message))
         console.log("getAllPersons failed", error)
       })
-  }, [])
+  }, [notifyError, notifySuccess])
 
   const deletePerson = (id) => {
     personService.deletePerson(id)
