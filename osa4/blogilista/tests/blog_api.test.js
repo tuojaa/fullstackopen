@@ -112,7 +112,7 @@ describe('get all blogs', () => {
         expect(existingBlogs.length).toBe(6)
 
         await api
-            .delete(`/api/blogs/this_is_some_bad_id`)
+            .delete('/api/blogs/this_is_some_bad_id')
             .expect(400)
 
         expect((await helper.blogsInDb()).length).toBe(6)
