@@ -94,6 +94,65 @@ describe('get all blogs', () => {
         expect((await helper.blogsInDb()).length).toBe(6)
     })
 
+    test('delete an existing blog succeeds', async () => {
+        const existingBlogs = await helper.blogsInDb()
+        expect(existingBlogs.length).toBe(6)
+
+        const url = `/api/blogs/${existingBlogs[0]._id}`
+
+        await api
+            .delete(url)
+            .expect(204)
+
+        expect((await helper.blogsInDb()).length).toBe(5)
+    })
+
+    test('delete with bad id fails', async () => {
+        const existingBlogs = await helper.blogsInDb()
+        expect(existingBlogs.length).toBe(6)
+
+        await api
+            .delete(`/api/blogs/this_is_some_bad_id`)
+            .expect(400)
+
+        expect((await helper.blogsInDb()).length).toBe(6)
+    })
+
+    test('delete twice succeeds', async () => {
+        const existingBlogs = await helper.blogsInDb()
+        expect(existingBlogs.length).toBe(6)
+
+        const url = `/api/blogs/${existingBlogs[0]._id}`
+
+        await api
+            .delete(url)
+            .expect(204)
+
+        await api
+            .delete(url)
+            .expect(204)
+
+        expect((await helper.blogsInDb()).length).toBe(5)
+    })
+
+    test('update an existing blog succeeds', async () => {
+        const existingBlogs = await helper.blogsInDb()
+        expect(existingBlogs.length).toBe(6)
+
+        const existingBlog = existingBlogs[0]
+
+        const url = `/api/blogs/${existingBlog._id}`
+
+        await api
+            .put(url)
+            .send( { ...existingBlog, likes: 100 })
+            .expect(204)
+
+        const existingBlogsAfter = await helper.blogsInDb()
+        expect(existingBlogsAfter.length).toBe(6)
+        const modifiedBlog = existingBlogsAfter.find(blog => (blog._id.toString()===existingBlog._id.toString()))
+        expect(modifiedBlog.likes).toBe(100)
+    })
 
     afterAll(() => {
         mongoose.connection.close()
