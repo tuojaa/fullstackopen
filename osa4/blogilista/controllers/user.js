@@ -3,6 +3,11 @@ const { User } = require('../models/user')
 
 const userRouter = require('express').Router()
 
+userRouter.get('/', async (request, response) => {
+    const users = await User.find({})
+    response.json(users.map(user => ({ username: user.username, id: user._id, name: user.name })))
+})
+
 userRouter.post('/', async (request, response) => {
     const username = request.body.username
     const name = request.body.name

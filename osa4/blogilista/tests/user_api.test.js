@@ -24,6 +24,29 @@ describe('User API', () => {
             .expect(201)
     })
 
+    test('New user is created via POST and returned via GET', async () => {
+        const userData = {
+            username: 'paavo',
+            name: 'Paavo Pesusieni',
+            password: 'squarepants'
+        }
+        await api
+            .post('/api/users')
+            .send(userData)
+            .expect(201)
+
+        const result = await api
+            .get('/api/users')
+            .expect(200)
+        expect(result.body.length).toBe(1)
+        expect(result.body[0].id).toBeDefined()
+        expect(result.body[0].username).toBe('paavo')
+        expect(result.body[0].name).toBe('Paavo Pesusieni')
+        expect(result.body[0].password).not.toBeDefined()
+        expect(result.body[0].passwordHash).not.toBeDefined()
+    })
+
+
     test('New user is not created via POST if username is missing', async () => {
         const userData = {
             name: 'Paavo Pesusieni',
