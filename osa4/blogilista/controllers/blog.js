@@ -9,13 +9,17 @@ blogRouter.get('/', async (request, response) => {
 })
 
 blogRouter.post('/', async (request, response) => {
-    const randomUser = await User.findOne({})
+    if(!request.user) {
+        response.status(401).end()
+        return
+    }
+
     const blogData = {
         title: request.body.title,
         author: request.body.author,
         url: request.body.url,
         likes: request.body.likes || 0,
-        user: randomUser
+        user: request.user
     }
 
     if(!blogData.title || !blogData.author) {
@@ -27,14 +31,22 @@ blogRouter.post('/', async (request, response) => {
 
     const result = await blog.save()
 
-    randomUser.blogs.push(result.id)
-    await randomUser.save()
+    request.user.blogs.push(result.id)
+    await request.user.save()
 
     response.status(201).json( { ...result._doc, id: result.id })
 })
 
 blogRouter.delete('/:id', async (request, response) => {
-    await Blog.findByIdAndDelete(request.params.id)
+    const blog = await Blog.findById(request.params.id)
+    if(!blog) {
+        response.status(404).end()
+    }
+    if(blog.user.toString() !== request.user.id.toString()) {
+        response.status(401).end()
+        return
+    }
+    await blog.delete()
     response.status(204).end()
 })
 
