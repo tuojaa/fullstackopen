@@ -29,9 +29,17 @@ const updateBlog = ({ id, title, author, url, likes, user }) => {
   return axios.put(`${baseUrl}/${id}`, newBlog, config)
 }
 
+const deleteBlog = (id) => {
+  const config = {
+    headers: { Authorization: token }
+  }
+  return axios.delete(`${baseUrl}/${id}`, config)
+}
+
 export default { 
   getAll,
   setToken,
   createBlog,
-  updateBlog
+  updateBlog,
+  deleteBlog
 }

@@ -104,8 +104,13 @@ const App = () => {
     
     blog.likes = blog.likes + 1
     blogService.updateBlog( blog )
+      .then(result => { setBlogs(newBlogs) })    
+  }
+
+  const removeBlog = (id) => {
+    const newBlogs = blogs.filter((blog) => (blog.id.toString() !== id))
+    blogService.deleteBlog( id )
       .then(result => { setBlogs(newBlogs) })
-    
   }
 
   if (user===null) {
@@ -128,7 +133,12 @@ const App = () => {
         <LoggedInUser name={user.name} handleLogout={doLogout}/>
         <h2>blogs</h2>
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} handleLike={() => addLike(blog.id)} />
+          <Blog 
+            key={blog.id} 
+            blog={blog} 
+            handleLike={() => addLike(blog.id)} 
+            handleRemove={() => removeBlog(blog.id)} 
+            />
         )}
         <Togglable buttonLabel='Add new blog'>
           <AddBlog
