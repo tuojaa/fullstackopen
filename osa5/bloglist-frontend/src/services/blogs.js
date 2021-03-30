@@ -36,10 +36,12 @@ const deleteBlog = (id) => {
   return axios.delete(`${baseUrl}/${id}`, config)
 }
 
-export default { 
+const blogService = { 
   getAll,
   setToken,
   createBlog,
   updateBlog,
   deleteBlog
 }
+
+export default blogService
