@@ -18,35 +18,27 @@ const App = () => {
     }, 5000)    
   }
 
-  const [author, setAuthor] = useState('')
-  const [title, setTitle] = useState('')
-  const [url, setUrl] = useState('')
 
-  const doAddBlog = (event) => {
-    event.preventDefault()
-    blogService.createBlog({ title, author, url })
+  const doAddBlog = ({ title, author, url }) => {
+    
+    return blogService.createBlog({ title, author, url })
       .then(result => {
         const newBlogs = [ ...blogs, result.data ]
         setBlogs(newBlogs)
-        setTitle('')
-        setAuthor('')
-        setUrl('')
         notify('success', 'Blog added!')
       })
       .catch(error => {
         notify('error', `Failed to add blog: ${error}`)
+        throw error
       })
   }
 
   const ls_key = 'dsloggedBloglistUser'
   const [user, setUser] = useState(null)
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
 
 
-  const doLogin = (event) => {
-    event.preventDefault()
-    loginService.login(username, password)
+  const doLogin = (username, password) => {    
+    return loginService.login(username, password)
       .then(result => {
         const user = {
           username: result.username,
@@ -54,18 +46,17 @@ const App = () => {
           token: result.token
         }
         setUser(user)
-        setUsername('')
-        setPassword('')
         window.localStorage.setItem(ls_key, JSON.stringify(user))
         blogService.setToken(user.token)
         notify('success', 'Logged in!')
       })
       .catch(error => {        
         if (error.response && error.response.status === 401) {
-          notify('error', 'Incorrect password!')
-          return
+          notify('error', 'Incorrect password!')                    
+        } else {
+          notify('error', `Unknown error when logging in: ${error}`)          
         }
-        notify('error', `Unknown error when logging in: ${error}`)
+        throw error
       })
   }
 
@@ -118,11 +109,7 @@ const App = () => {
       <div>
         <Notification message={notification} />
         <LoginForm 
-          username={username}
-          password={password}
-          handleUsernameChange={({ target }) => setUsername(target.value)}
-          handlePasswordChange={({ target }) => setPassword(target.value)}
-          handleSubmit={doLogin} 
+          doLogin={doLogin} 
         />
       </div>
     )
@@ -141,14 +128,8 @@ const App = () => {
             />
         )}
         <Togglable buttonLabel='Add new blog'>
-          <AddBlog
-            title={title}
-            url={url}
-            author={author}
-            handleTitleChange={({ target }) =>  setTitle(target.value)}
-            handleUrlChange={({ target }) =>  setUrl(target.value)}
-            handleAuthorChange={({ target }) =>  setAuthor(target.value)}
-            handleSubmit={doAddBlog}
+          <AddBlog            
+            doAddBlog={doAddBlog}
           />
         </Togglable>
       </div>

@@ -1,55 +1,59 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
-const AddBlog = ({
-   handleSubmit,
-   handleTitleChange,
-   handleAuthorChange,
-   handleUrlChange,
-   title,
-   url,
-   author
-  }) => {
-  return (
-    <div>
-      <h2>Add new blog</h2>
+const AddBlog = ({ doAddBlog }) => {
+    const [author, setAuthor] = useState('')
+    const [title, setTitle] = useState('')
+    const [url, setUrl] = useState('')
+  
+    const handleSubmit = (event) => {
+        event.preventDefault()        
+        doAddBlog({ author, title, url }).then(() => {
+            setAuthor('')
+            setTitle('')
+            setUrl('')    
+        })
+    }
 
-      <form onSubmit={handleSubmit}>
+    return (
         <div>
-          title
-          <input
-            value={title}
-            onChange={handleTitleChange}
-          />
+        <h2>Add new blog</h2>
+
+        <form onSubmit={handleSubmit}>
+            <div>
+            title
+            <input
+                id="title"
+                value={title}
+                onChange={({ target }) => setTitle( target.value )}
+            />
+            </div>
+            <div>
+            author
+            <input
+                id="author"
+                value={author}
+                onChange={({ target }) => setAuthor( target.value )}
+            />
+            </div>
+            <div>
+            url
+            <input
+                id="url"
+                value={url}
+                onChange={({ target }) => setUrl( target.value )}
+            />
+            </div>
+            <button 
+                id="submit"
+                type="submit">add</button>
+        </form>
         </div>
-        <div>
-          author
-          <input
-            value={author}
-            onChange={handleAuthorChange}
-          />
-        </div>
-        <div>
-          url
-          <input
-            value={url}
-            onChange={handleUrlChange}
-          />
-        </div>
-        <button type="submit">add</button>
-      </form>
-    </div>
-  )
+    )
 }
 
 AddBlog.propTypes = {
-    handleSubmit: PropTypes.func.isRequired,
-    handleTitleChange: PropTypes.func.isRequired,
-    handleAuthorChange: PropTypes.func.isRequired,
-    handleUrlChange: PropTypes.func.isRequired,
-    title: PropTypes.string.isRequired,
-    url: PropTypes.string.isRequired,
-    author: PropTypes.string.isRequired
+    doAddBlog: PropTypes.func.isRequired    
 }
 
 export default AddBlog
