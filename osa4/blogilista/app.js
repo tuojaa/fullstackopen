@@ -1,5 +1,6 @@
 const express = require('express')
 const cors = require('cors')
+const morgan = require('morgan')
 const mongoose = require('mongoose')
 require('express-async-errors')
 
@@ -14,6 +15,20 @@ app.use(tokenExtractor)
 app.use(userExtractor)
 app.use(cors())
 app.use(express.json())
+
+app.use(morgan((tokens, req, res) => {
+    let fields = [
+        tokens.method(req, res),
+        tokens.url(req, res),
+        tokens.status(req, res),
+        tokens.res(req, res, 'content-length'), '-',
+        tokens['response-time'](req, res), 'ms'
+    ]
+    if (tokens.method(req, res) === 'POST') {
+        fields = fields.concat(JSON.stringify(req.body))
+    }
+    return fields.join(' ')
+}))
 
 mongoose.connect(config.MONGODB_URI, {
     useNewUrlParser: true,
