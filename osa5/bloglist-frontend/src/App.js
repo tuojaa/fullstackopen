@@ -81,9 +81,10 @@ const App = () => {
   const [blogs, setBlogs] = useState([])
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
+    blogService.getAll().then(blogs => {
+      console.log(blogs)
       setBlogs( blogs )
-    )  
+    })  
   }, [])
 
   const doLogout = () => {
