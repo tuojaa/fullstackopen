@@ -8,7 +8,7 @@ const helper = require('./test_helper')
 const api = supertest(app)
 
 
-describe('get all blogs', () => {
+describe('Blog API', () => {
     beforeEach(async () => {
         await Blog.deleteMany({})
 
