@@ -98,7 +98,7 @@ describe('Blog API', () => {
         const existingBlogs = await helper.blogsInDb()
         expect(existingBlogs.length).toBe(6)
 
-        const url = `/api/blogs/${existingBlogs[0]._id}`
+        const url = `/api/blogs/${existingBlogs[0].id}`
 
         await api
             .delete(url)
@@ -122,7 +122,7 @@ describe('Blog API', () => {
         const existingBlogs = await helper.blogsInDb()
         expect(existingBlogs.length).toBe(6)
 
-        const url = `/api/blogs/${existingBlogs[0]._id}`
+        const url = `/api/blogs/${existingBlogs[0].id}`
 
         await api
             .delete(url)
@@ -141,7 +141,7 @@ describe('Blog API', () => {
 
         const existingBlog = existingBlogs[0]
 
-        const url = `/api/blogs/${existingBlog._id}`
+        const url = `/api/blogs/${existingBlog.id}`
 
         await api
             .put(url)
@@ -150,7 +150,7 @@ describe('Blog API', () => {
 
         const existingBlogsAfter = await helper.blogsInDb()
         expect(existingBlogsAfter.length).toBe(6)
-        const modifiedBlog = existingBlogsAfter.find(blog => (blog._id.toString()===existingBlog._id.toString()))
+        const modifiedBlog = existingBlogsAfter.find(blog => (blog.id.toString()===existingBlog.id.toString()))
         expect(modifiedBlog.likes).toBe(100)
     })
 
