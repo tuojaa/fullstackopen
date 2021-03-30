@@ -4,6 +4,7 @@ import LoginForm from './components/LoginForm'
 import AddBlog from './components/AddBlog'
 import LoggedInUser from './components/LoggedInUser'
 import Notification from './components/Notification'
+import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -21,15 +22,6 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [url, setUrl] = useState('')
 
-  const handleTitleChange = (event) => {
-    setTitle(event.target.value)
-  }
-  const handleAuthorChange = (event) => {
-    setAuthor(event.target.value)
-  }
-  const handleUrlChange = (event) => {
-    setUrl(event.target.value)
-  }
   const doAddBlog = (event) => {
     event.preventDefault()
     blogService.createBlog({ title, author, url })
@@ -51,13 +43,6 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
-  const handleUsernameChange = (event) => {
-    setUsername(event.target.value)
-  }
-
-  const handlePasswordChange = (event) => {
-    setPassword(event.target.value)
-  }
 
   const doLogin = (event) => {
     event.preventDefault()
@@ -114,8 +99,8 @@ const App = () => {
         <LoginForm 
           username={username}
           password={password}
-          handleUsernameChange={handleUsernameChange}
-          handlePasswordChange={handlePasswordChange}
+          handleUsernameChange={({ target }) => setUsername(target.value)}
+          handlePasswordChange={({ target }) => setPassword(target.value)}
           handleSubmit={doLogin} 
         />
       </div>
@@ -129,15 +114,17 @@ const App = () => {
         {blogs.map(blog =>
           <Blog key={blog.id} blog={blog} />
         )}
-        <AddBlog
-          title={title}
-          url={url}
-          author={author}
-          handleTitleChange={handleTitleChange}
-          handleUrlChange={handleUrlChange}
-          handleAuthorChange={handleAuthorChange}
-          handleSubmit={doAddBlog}
-        />
+        <Togglable buttonLabel='Add new blog'>
+          <AddBlog
+            title={title}
+            url={url}
+            author={author}
+            handleTitleChange={({ target }) =>  setTitle(target.value)}
+            handleUrlChange={({ target }) =>  setUrl(target.value)}
+            handleAuthorChange={({ target }) =>  setAuthor(target.value)}
+            handleSubmit={doAddBlog}
+          />
+        </Togglable>
       </div>
     )  
   }
