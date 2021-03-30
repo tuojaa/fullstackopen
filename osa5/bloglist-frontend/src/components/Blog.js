@@ -33,8 +33,8 @@ const Blog = ({ blog, handleLike, handleRemove }) => {
   } else {
     return (  
       <div style={blogStyle}>
-        <div>
-          <strong>{blog.title}</strong> by <strong>{blog.author}</strong> <button onClick={() => setDetails(true)}>show</button>
+        <div className="blogSummary">
+          <strong>{blog.title}</strong> by <strong>{blog.author}</strong> <button className="showblog" onClick={() => setDetails(true)}>show</button>
         </div>        
       </div>  
     )  

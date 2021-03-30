@@ -101,7 +101,13 @@ const App = () => {
   const removeBlog = (id) => {
     const newBlogs = blogs.filter((blog) => (blog.id.toString() !== id))
     blogService.deleteBlog( id )
-      .then(result => { setBlogs(newBlogs) })
+      .then(result => { 
+        setBlogs(newBlogs) 
+        notify('success', 'Blog removed!')
+      })
+      .catch(error => {
+        notify('error', `Blog was not removed: ${error}`)
+      })
   }
 
   if (user===null) {
