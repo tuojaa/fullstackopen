@@ -99,7 +99,7 @@ describe('User API', () => {
         }
         await api
             .post('/api/users')
-            .send(userData)
+            .send(userData2)
             .expect(400)
     })
 
