@@ -19,8 +19,19 @@ const createBlog = newBlog => {
   return axios.post(baseUrl, newBlog, config)
 }
 
+const updateBlog = ({ id, title, author, url, likes, user }) => {
+  const config = {
+    headers: { Authorization: token }
+  }
+  const newBlog = {
+    title, author, url, likes, user: user?user.id:null
+  }
+  return axios.put(`${baseUrl}/${id}`, newBlog, config)
+}
+
 export default { 
   getAll,
   setToken,
-  createBlog
+  createBlog,
+  updateBlog
 }

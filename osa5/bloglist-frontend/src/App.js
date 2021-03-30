@@ -78,7 +78,12 @@ const App = () => {
     }
   }, [])
 
-  const [blogs, setBlogs] = useState([])
+  const [blogs, _setBlogs] = useState([])
+
+  const setBlogs = (blogs) => {
+    blogs.sort( (a,b) => (b.likes - a.likes))
+    _setBlogs(blogs)
+  }
 
   useEffect(() => {
     blogService.getAll().then(blogs => {
@@ -91,6 +96,16 @@ const App = () => {
     window.localStorage.removeItem(ls_key)
     setUser(null)
     notify('success', 'Logged out!')
+  }
+
+  const addLike = (id) => {
+    const newBlogs = [ ...blogs ]
+    const blog = newBlogs.find(blog => (blog.id.toString()===id))
+    
+    blog.likes = blog.likes + 1
+    blogService.updateBlog( blog )
+      .then(result => { setBlogs(newBlogs) })
+    
   }
 
   if (user===null) {
@@ -113,7 +128,7 @@ const App = () => {
         <LoggedInUser name={user.name} handleLogout={doLogout}/>
         <h2>blogs</h2>
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
+          <Blog key={blog.id} blog={blog} handleLike={() => addLike(blog.id)} />
         )}
         <Togglable buttonLabel='Add new blog'>
           <AddBlog

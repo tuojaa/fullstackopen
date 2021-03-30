@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const Blog = ({blog}) => {
+const Blog = ({ blog, handleLike }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -11,15 +11,6 @@ const Blog = ({blog}) => {
 
   const [ details, setDetails ] = useState(false)
   
-  const handleShow = () => {
-    setDetails(true)
-  }
-
-  const handleHide = () => {
-    setDetails(false)
-  }
-
-
   if (details) {
     return (
       <div style={blogStyle}>
@@ -30,7 +21,7 @@ const Blog = ({blog}) => {
           {blog.url}
         </div>
         <div>
-          {blog.likes} likes 
+          {blog.likes} likes <button onClick={handleLike}>like</button>
         </div>
         <div>
           Added by {blog.user && blog.user.name}
@@ -41,7 +32,7 @@ const Blog = ({blog}) => {
     return (  
       <div style={blogStyle}>
         <div>
-          {blog.title} {blog.author} <button onClick={handleShow}>show</button>
+          {blog.title} {blog.author} <button onClick={() => setDetails(true)}>show</button>
         </div>        
       </div>  
     )  
