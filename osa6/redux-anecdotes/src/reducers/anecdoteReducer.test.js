@@ -1,4 +1,4 @@
-import anecdoteReducer, { vote, addAnecdote } from './anecdoteReducer'
+import anecdoteReducer, { voteAction, addAnecdoteAction } from './anecdoteReducer'
 
 describe('anecdote reducer', () => {
   test('should return a proper initial state when called with undefined state', () => {
@@ -7,7 +7,7 @@ describe('anecdote reducer', () => {
     }
 
     const newState = anecdoteReducer(undefined, action)
-    expect(newState).toHaveLength(6)
+    expect(newState).toHaveLength(0)
   })
 
   test('vote action should increase number of votes', () => {
@@ -17,7 +17,7 @@ describe('anecdote reducer', () => {
           votes: 0
         }]    
         
-        const newState = anecdoteReducer(initialState, vote(initialState[0]))
+        const newState = anecdoteReducer(initialState, voteAction(initialState[0]))
         expect(newState).toHaveLength(1)
         expect(newState[0].votes).toBe(1)
   })
@@ -34,7 +34,7 @@ describe('anecdote reducer', () => {
         votes: 0
       }]    
       
-      const newState = anecdoteReducer(initialState, vote(initialState[1]))
+      const newState = anecdoteReducer(initialState, voteAction(initialState[1]))
       expect(newState).toHaveLength(2)
       expect(newState[0].votes).toBe(1)
       expect(newState[0].id).toBe(2)
@@ -47,7 +47,7 @@ describe('anecdote reducer', () => {
         votes: 2
       }]          
       
-      const newState = anecdoteReducer(initialState, addAnecdote('Foobar'))
+      const newState = anecdoteReducer(initialState, addAnecdoteAction(2, 'Foobar'))
       expect(newState).toHaveLength(2)
       expect(newState[0].votes).toBe(2)
       expect(newState[1].votes).toBe(0)

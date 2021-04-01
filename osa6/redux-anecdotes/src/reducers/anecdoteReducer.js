@@ -1,11 +1,5 @@
-const anecdotesAtStart = [
-  'If it hurts, do it more often',
-  'Adding manpower to a late software project makes it later!',
-  'The first 90 percent of the code accounts for the first 90 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.',
-  'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.',
-  'Premature optimization is the root of all evil.',
-  'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'
-]
+import anecdoteService from '../services/anecdotes'
+import { notify } from '../services/notification'
 
 const getId = () => (100000 * Math.random()).toFixed(0)
 
@@ -17,21 +11,63 @@ const asObject = (anecdote) => {
   }
 }
 
-export const vote = (anecdote) => {
+export const voteAction = (anecdote) => {
   return {
     type: "VOTE",
     id: anecdote.id
   }
 }
 
-export const addAnecdote = (content) => {
+export const updateAction = (anecdote) => {
+  return {
+    type: "UPDATE_ANECDOTE",
+    anecdote
+  }
+}
+
+export const vote = (anecdote) => {
+  return async dispatch => {
+    console.log("vote", anecdote)
+    const result = await anecdoteService.update({ ...anecdote, votes: anecdote.votes+1 })
+    dispatch(updateAction(result))
+  }
+}
+
+export const addAnecdoteAction = (id, content) => {
   return {
     type: "ADD_ANECDOTE",
+    id,
     content
   }
 }
 
-const initialState = anecdotesAtStart.map(asObject)
+export const addAnecdote = (value) => {
+  return async dispatch => {
+    const result = await anecdoteService.createNew(value)
+    
+    const action = addAnecdoteAction(result.id, result.content)
+  
+    dispatch(action)
+    dispatch(notify('Added anecdote!', 10))    
+  }
+}
+
+export const initAnecdotesAction = (anecdotes) => {
+  return {
+    type: "INIT_ANECDOTES",
+    anecdotes
+  }
+}
+
+export const initAnecdotes = () => {
+  return async dispatch => {
+    const anecdotes = await anecdoteService.getAll()
+    dispatch(initAnecdotesAction(anecdotes))
+  }
+}
+
+
+const initialState = []
 
 const anecdoteReducer = (state = initialState, action) => {
   console.log('state now: ', state)
@@ -45,14 +81,24 @@ const anecdoteReducer = (state = initialState, action) => {
         return obj
       }).sort( (a,b) => (b.votes - a.votes) )
     }      
+    case 'UPDATE_ANECDOTE': {      
+      return state.map(obj => {
+        if(obj.id === action.anecdote.id) {
+          return action.anecdote
+        }
+        return obj
+      }).sort( (a,b) => (b.votes - a.votes) )
+    }      
     case 'ADD_ANECDOTE': {
       const newAnecdote = {
         content: action.content,
-        votes: 0,
-        id: getId()
+        id: action.id, 
+        votes: 0,        
       }
       return [ ...state, newAnecdote ]
     }
+    case 'INIT_ANECDOTES':
+      return action.anecdotes
     case 'INIT':
       return initialState
     default: return state
