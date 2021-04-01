@@ -1,8 +1,12 @@
 import { setNotification, clearNotification } from '../reducers/notificationReducer'
 
+let notificationTimeout = undefined
+
 export const notify = (message, seconds) => {
     return async dispatch => {
         dispatch(setNotification(message))
-        setTimeout(() => dispatch(clearNotification()), seconds*1000)    
+        if(notificationTimeout)
+            clearTimeout(notificationTimeout)
+        notificationTimeout = setTimeout(() => dispatch(clearNotification()), seconds*1000)    
     }
 }
