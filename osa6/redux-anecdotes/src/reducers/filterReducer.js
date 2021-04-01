@@ -1,4 +1,4 @@
-const initialState = null    
+const initialState = ''    
 
 export const setFilter = (value) => {
     return {
