@@ -1,6 +1,6 @@
 import { setNotification, clearNotification } from '../reducers/notificationReducer'
 
-let notificationTimeout = undefined
+var notificationTimeout = undefined
 
 export const notify = (message, seconds) => {
     return async dispatch => {
