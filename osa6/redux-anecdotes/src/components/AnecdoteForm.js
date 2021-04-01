@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { addAnecdote } from '../reducers/anecdoteReducer'
+import { notify } from '../controllers/notification'
 
 const AnecdoteForm = () => {
     const [ value, setValue ] = useState('')
@@ -9,6 +10,7 @@ const AnecdoteForm = () => {
     const handleAdd = (event) => {
         event.preventDefault()
         dispatch(addAnecdote(value))
+        notify(dispatch, 'Added anecdote!')
     }
 
     return (
