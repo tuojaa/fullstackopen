@@ -106,13 +106,19 @@ const CreateNew = (props) => {
     history.push('/')
   }
 
+  const reset = (event) => {
+    event.preventDefault()
+    const fields = [content,author,info]
+    fields.map(c => c.reset())
+  }
+
   return (
     <div>
       <h2>create a new anecdote</h2>
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input name='content' { ...content } />
+          <input name='content' { ...content} />
         </div>
         <div>
           author
@@ -124,6 +130,7 @@ const CreateNew = (props) => {
         </div>
         <button>create</button>
       </form>
+      <button onClick={reset}>reset</button>
     </div>
   )
 
