@@ -1,8 +1,31 @@
 import React, { useState } from 'react'
 import {
   BrowserRouter as Router,
-  Switch, Route, Link
+  Switch, Route, Link,
+  useParams, useHistory
 } from "react-router-dom"
+
+
+const Notification = (props) => {
+  const style = {
+    border: 'solid',
+    padding: 10,
+    borderWidth: 1
+  }
+
+  if(!props.notification) {
+    return (
+      <>
+      </>
+    )
+  } else {
+    return (
+      <div style={style}>
+        {props.notification}
+      </div>
+    )  
+  }
+}
 
 const Menu = () => {
   const padding = {
@@ -21,10 +44,27 @@ const AnecdoteList = ({ anecdotes }) => (
   <div>
     <h2>Anecdotes</h2>
     <ul>
-      {anecdotes.map(anecdote => <li key={anecdote.id} >{anecdote.content}</li>)}
+      {anecdotes.map(anecdote => <li key={anecdote.id} >
+        <Link to={`/anecdotes/${anecdote.id}`}>
+          {anecdote.content}
+        </Link>        
+      </li>)}
     </ul>
   </div>
 )
+
+const AnecdoteDetail = ({ anecdotes }) => {
+  const id = useParams().id
+  const anecdote = anecdotes.find(anecdote => anecdote.id===id)
+  return (
+    <div>
+      <h2>{anecdote.content}</h2>
+      <div>has {anecdote.votes} votes</div>
+      <div>for more info see <a href={anecdote.info}>{anecdote.info}</a></div>
+      <br/>
+    </div>
+  )
+}
 
 const About = () => (
   <div>
@@ -53,6 +93,7 @@ const CreateNew = (props) => {
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
 
+  const history = useHistory()
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -62,6 +103,7 @@ const CreateNew = (props) => {
       info,
       votes: 0
     })
+    history.push('/')
   }
 
   return (
@@ -105,11 +147,21 @@ const App = () => {
     }
   ])
 
-  const [notification, setNotification] = useState('')
+  const [ notification, setNotification ] = useState('')
+  let notificationTimeoutHandle = undefined
+  const notify = (message) => {
+    if(notificationTimeoutHandle) 
+      clearTimeout(notificationTimeoutHandle)
+    setNotification(message)
+    notificationTimeoutHandle = setTimeout(() => {
+      setNotification('')      
+    }, 10000)
+  }
 
   const addNew = (anecdote) => {
     anecdote.id = (Math.random() * 10000).toFixed(0)
     setAnecdotes(anecdotes.concat(anecdote))
+    notify(`a new anecdote '${anecdote.content}' created!`)
   }
 
   const anecdoteById = (id) =>
@@ -126,18 +178,23 @@ const App = () => {
     setAnecdotes(anecdotes.map(a => a.id === id ? voted : a))
   }
 
+
   return (
     <div>
       <h1>Software anecdotes</h1>
       <Router>
         <Menu />
+        <Notification notification={notification} />
         <Switch>
           <Route path="/about/">
             <About />
           </Route>
           <Route path="/create/">
             <CreateNew addNew={addNew} />
-          </Route>       
+          </Route>                 
+          <Route path="/anecdotes/:id">
+            <AnecdoteDetail anecdotes={anecdotes} />
+          </Route>
           <Route path="/">
             <AnecdoteList anecdotes={anecdotes} />
           </Route>
