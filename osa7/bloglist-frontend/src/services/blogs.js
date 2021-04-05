@@ -7,12 +7,17 @@ const setToken = newToken => {
   token = `Bearer ${newToken}`
 }
 
+const clearToken = () => {
+  token = undefined
+}
+
 const getAll = () => {
   const request = axios.get(baseUrl)
   return request.then(response => response.data)
 }
 
 const createBlog = newBlog => {
+  if(!token) throw new Error('Not authorized!')
   const config = {
     headers: { Authorization: token }
   }
@@ -20,6 +25,7 @@ const createBlog = newBlog => {
 }
 
 const updateBlog = ({ id, title, author, url, likes, user }) => {
+  if(!token) throw new Error('Not authorized!')
   const config = {
     headers: { Authorization: token }
   }
@@ -30,6 +36,7 @@ const updateBlog = ({ id, title, author, url, likes, user }) => {
 }
 
 const deleteBlog = (id) => {
+  if(!token) throw new Error('Not authorized!')
   const config = {
     headers: { Authorization: token }
   }
@@ -39,6 +46,7 @@ const deleteBlog = (id) => {
 const blogService = {
   getAll,
   setToken,
+  clearToken,
   createBlog,
   updateBlog,
   deleteBlog

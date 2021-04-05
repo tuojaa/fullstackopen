@@ -1,79 +1,39 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import BlogList from './components/BlogList'
 import LoginForm from './components/LoginForm'
 import AddBlog from './components/AddBlog'
 import LoggedInUser from './components/LoggedInUser'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
-import blogService from './services/blogs'
-import loginService from './services/login'
-import { useDispatch } from 'react-redux'
+import { useDispatch, connect } from 'react-redux'
 import { initBlogs } from './reducers/blogReducer'
-import { notify } from './reducers/notificationReducer'
+import { loginUserFromDS } from './reducers/userReducer'
 
-const App = () => {
+const App = (props) => {
   const dispatch = useDispatch()
 
   useEffect( () => {
     dispatch(initBlogs())
   }, [dispatch])
 
-  const ls_key = 'dsloggedBloglistUser'
-  const [user, setUser] = useState(null)
-
-  const doLogin = (username, password) => {
-    return loginService.login(username, password)
-      .then(result => {
-        const user = {
-          username: result.username,
-          name: result.name,
-          token: result.token
-        }
-        setUser(user)
-        window.localStorage.setItem(ls_key, JSON.stringify(user))
-        blogService.setToken(user.token)
-        dispatch(notify('success', 'Logged in!'))
-      })
-      .catch(error => {
-        if (error.response && error.response.status === 401) {
-          dispatch(notify('error', 'Incorrect password!'))
-        } else {
-          dispatch(notify('error', `Unknown error when logging in: ${error}`))
-        }
-        throw error
-      })
-  }
-
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem(ls_key)
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      blogService.setToken(user.token)
-      dispatch(notify('success', 'Logged in automatically!'))
-    }
+    dispatch(loginUserFromDS())
   }, [])
 
-  const doLogout = () => {
-    window.localStorage.removeItem(ls_key)
-    setUser(null)
-    dispatch(notify('success', 'Logged out!'))
-  }
 
-  if (user===null) {
+  if (props.user===null) {
     return (
       <div>
         <Notification />
-        <LoginForm
-          doLogin={doLogin}
-        />
+        <LoggedInUser />
+        <LoginForm/>
       </div>
     )
   } else {
     return (
       <div>
         <Notification />
-        <LoggedInUser name={user.name} handleLogout={doLogout}/>
+        <LoggedInUser />
         <h2>blogs</h2>
         <BlogList />
         <Togglable buttonLabel='Add new blog'>
@@ -84,4 +44,11 @@ const App = () => {
   }
 }
 
-export default App
+const mapStateToProps = (state) => {
+  return {
+    user: state.user,
+  }
+}
+
+export default connect(mapStateToProps)(App)
+

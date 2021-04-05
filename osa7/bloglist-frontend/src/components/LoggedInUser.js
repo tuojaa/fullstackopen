@@ -1,20 +1,31 @@
 import React from 'react'
-import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import { clearUser } from '../reducers/userReducer'
+import { useDispatch } from 'react-redux'
 
-const LoggedInUser = ({
-  name,
-  handleLogout
-}) => {
+const LoggedInUser = ({ user }) => {
+  const dispatch = useDispatch()
+
+  const handleLogout = () => {
+    dispatch(clearUser())
+  }
+
+  if(!user) {
+    return (
+      <div>Not logged in!</div>
+    )
+  }
   return (
     <div>
-      Logged in as {name} <button onClick={handleLogout}>logout</button>
+      Logged in as {user.name} <button onClick={handleLogout}>logout</button>
     </div>
   )
 }
 
-LoggedInUser.propTypes = {
-  name: PropTypes.string.isRequired,
-  handleLogout: PropTypes.func.isRequired
+const mapStateToProps = (state) => {
+  return {
+    user: state.user,
+  }
 }
 
-export default LoggedInUser
+export default connect(mapStateToProps)(LoggedInUser)
