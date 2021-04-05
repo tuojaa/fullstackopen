@@ -2,7 +2,6 @@ import React, { useEffect } from 'react'
 import BlogList from './components/BlogList'
 import LoginForm from './components/LoginForm'
 import AddBlog from './components/AddBlog'
-import LoggedInUser from './components/LoggedInUser'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import UserList from './components/UserList'
@@ -38,7 +37,6 @@ const App = (props) => {
   return (
     <Container>
       <Notification />
-      <LoggedInUser />
       { (props.user===null) ? (
         <LoginForm/>
       ) : (
@@ -57,6 +55,7 @@ const App = (props) => {
               </Route>
               <Route path="/">
                 <BlogList />
+                <br/>
                 <Togglable buttonLabel='Add new blog'>
                   <AddBlog />
                 </Togglable>

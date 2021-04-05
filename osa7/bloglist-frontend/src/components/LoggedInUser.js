@@ -4,9 +4,7 @@ import { clearUser } from '../reducers/userReducer'
 import { useDispatch } from 'react-redux'
 import {
   Button,
-  Grid,
-  Avatar,
-  Typography
+  Avatar
 } from '@material-ui/core'
 
 const LoggedInUser = ({ user }) => {
@@ -18,30 +16,14 @@ const LoggedInUser = ({ user }) => {
 
   if(!user) {
     return (
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <Typography variant="h6" gutterBottom>
-              Not logged in!
-          </Typography>
-        </Grid>
-      </Grid>
+      <></>
     )
   }
   return (
-    <Grid container spacing={3}>
-      <Grid item xs={1}>
-        <Avatar>{user.name[0]}</Avatar>
-      </Grid>
-      <Grid item xs={7}>
-        <Typography variant="h6" gutterBottom>
-          Logged in as {user.name}
-        </Typography>
-      </Grid>
-      <Grid item xs={4}>
-        <Button
-          onClick={handleLogout}>Logout</Button>
-      </Grid>
-    </Grid>
+    <div>
+      <Button color="inherit"><Avatar>{user.name[0]}</Avatar>&nbsp;Logged in as {user.name}</Button>
+      <Button color="inherit" onClick={handleLogout}>Logout</Button>
+    </div>
   )
 }
 

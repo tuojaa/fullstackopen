@@ -1,37 +1,34 @@
 import React from 'react'
+import LoggedInUser from './LoggedInUser'
 import { Link } from 'react-router-dom'
-import Button from '@material-ui/core/Button'
-import Menu from '@material-ui/core/Menu'
-import MenuItem from '@material-ui/core/MenuItem'
+import { Button,
+  AppBar,
+  Toolbar
+}  from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
+
+const useStyles = makeStyles(() => ({
+  grow: {
+    flexGrow: 1
+  }
+}))
 
 const AppMenu = () => {
-
-  const [anchorEl, setAnchorEl] = React.useState(null)
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget)
-  }
-
-  const handleClose = () => {
-    setAnchorEl(null)
-  }
+  const classes = useStyles()
 
   return (
-    <div>
-      <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
-        Open Menu
-      </Button>
-      <Menu
-        id="simple-menu"
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-      >
-        <MenuItem><Link to='/'>Blogs</Link></MenuItem>
-        <MenuItem><Link to='/users/'>Users</Link></MenuItem>
-      </Menu>
-    </div>
+    <AppBar position="static">
+      <Toolbar>
+        <Button color="inherit" component={Link} to="/">
+          Blogs
+        </Button>
+        <Button color="inherit" component={Link} to="/users/">
+          Users
+        </Button>
+        <div className={classes.grow} />
+        <LoggedInUser />
+      </Toolbar>
+    </AppBar>
   )
 }
 

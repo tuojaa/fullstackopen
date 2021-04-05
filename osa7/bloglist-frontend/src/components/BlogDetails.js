@@ -4,21 +4,19 @@ import { likeBlog, removeBlog } from '../reducers/blogReducer'
 import { useParams } from 'react-router-dom'
 import { addComment } from '../reducers/blogReducer'
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableRow,
-  Paper,
   TextField,
   Button,
   List,
   ListItem,
   ListItemText,
-  Typography
+  Typography,
+  Card,
+  CardContent,
+  CardActions
 } from '@material-ui/core'
 import ThumbUpIcon from '@material-ui/icons/ThumbUp'
 import DeleteIcon from '@material-ui/icons/Delete'
+import { makeStyles } from '@material-ui/core/styles'
 
 const AddComment = ({ blog }) => {
   const dispatch = useDispatch()
@@ -32,11 +30,10 @@ const AddComment = ({ blog }) => {
 
   return (
     <div>
-      <Typography variant="h2">Add new comment</Typography>
-
       <form onSubmit={handleSubmit}>
         <div>
           <TextField
+            label="Add a comment..."
             id="comment"
             value={comment}
             onChange={({ target }) => setComment( target.value )}
@@ -46,6 +43,34 @@ const AddComment = ({ blog }) => {
           id="submit" type="submit">Add</Button>
       </form>
     </div>
+  )
+}
+
+const useStyles = makeStyles({
+  root: {
+    minWidth: 275,
+  }
+})
+
+const CommentList = ({ comments }) => {
+  const classes = useStyles()
+  if(comments.length === 0) {
+    return (
+      <Typography className={classes.pos} color="textSecondary">
+          No comments yet!
+      </Typography>
+    )
+  }
+  return (
+    <List>
+      {comments.map(comment =>
+        <ListItem key={comment.id}>
+          <ListItemText>
+            {comment.comment}
+          </ListItemText>
+        </ListItem>
+      )}
+    </List>
   )
 }
 
@@ -65,7 +90,40 @@ const BlogDetails = ({ blogs }) => {
   const handleRemove = () => {
     dispatch(removeBlog(blog))
   }
+  const classes = useStyles()
 
+  return (
+    <Card className={classes.root}>
+      <CardContent>
+        <Typography className={classes.title} color="textSecondary" gutterBottom>
+          <a href={blog.url}>{blog.title}</a>
+        </Typography>
+        <Typography>
+          by <strong>{blog.author}</strong>
+        </Typography>
+        <Typography className={classes.pos} color="textSecondary">
+          {blog.likes} likes
+        </Typography>
+        <CommentList comments={blog.comments} />
+        <AddComment blog={blog} />
+      </CardContent>
+      <CardActions>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<ThumbUpIcon />}
+          onClick={handleLike}
+        >Like</Button>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={handleRemove}
+          startIcon={<DeleteIcon />}
+        >Remove</Button>
+      </CardActions>
+    </Card>
+  )
+/*
   return (
     <div>
       <TableContainer component={Paper}>
@@ -122,6 +180,7 @@ const BlogDetails = ({ blogs }) => {
       </List>
     </div>
   )
+*/
 }
 
 const mapStateToProps = (state) => {

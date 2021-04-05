@@ -1,9 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import {
-  Paper,
-  Typography
+  Snackbar
 } from '@material-ui/core'
+import Alert from '@material-ui/lab/Alert'
 
 const Notification = (props) => {
 
@@ -13,13 +13,12 @@ const Notification = (props) => {
       </>
     )
   } else {
-    return (
-      <Paper variant="outlined" square>
-        <Typography variant="h6">
-          {props.notification.message}
-        </Typography>
-      </Paper>
+    const component = (
+      <Snackbar open={true} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+        <Alert severity={props.notification.status}>{props.notification.message}</Alert>
+      </Snackbar>
     )
+    return component
   }
 }
 
