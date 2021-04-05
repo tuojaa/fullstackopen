@@ -1,6 +1,18 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import Blog from './Blog'
+import { Link } from 'react-router-dom'
+
+const Blog = ({ blog }) => {
+  return (
+    <div>
+      <strong>
+        <Link to={`/blogs/${blog.id}`}>
+          {blog.title}
+        </Link>
+      </strong> by <strong>{blog.author}</strong>
+    </div>
+  )
+}
 
 const BlogList = ({ blogs }) => {
   return (

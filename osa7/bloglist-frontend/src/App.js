@@ -7,6 +7,7 @@ import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import UserList from './components/UserList'
 import UserDetails from './components/UserDetails'
+import BlogDetails from './components/BlogDetails'
 import { useDispatch, connect } from 'react-redux'
 import { initBlogs } from './reducers/blogReducer'
 import { loginUserFromDS } from './reducers/userReducer'
@@ -47,6 +48,9 @@ const App = (props) => {
               </Route>
               <Route path="/users">
                 <UserList />
+              </Route>
+              <Route path="/blogs/:id">
+                <BlogDetails />
               </Route>
               <Route path="/">
                 <BlogList />
