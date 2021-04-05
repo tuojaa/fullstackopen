@@ -8,6 +8,7 @@ import Togglable from './components/Togglable'
 import UserList from './components/UserList'
 import UserDetails from './components/UserDetails'
 import BlogDetails from './components/BlogDetails'
+import Menu from './components/Menu'
 import { useDispatch, connect } from 'react-redux'
 import { initBlogs } from './reducers/blogReducer'
 import { loginUserFromDS } from './reducers/userReducer'
@@ -42,6 +43,7 @@ const App = (props) => {
       ) : (
         <div>
           <Router>
+            <Menu />
             <Switch>
               <Route path="/users/:id">
                 <UserDetails />
