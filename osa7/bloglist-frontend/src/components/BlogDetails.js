@@ -43,6 +43,14 @@ const BlogDetails = ({ blogs }) => {
         Added by {blog.user && blog.user.name}
       </div>
       <button onClick={handleRemove}>remove</button>
+      <h2>comments</h2>
+      {blog.comments.map(comment =>
+        <li
+          key={comment.id}
+        >
+          {comment.comment}
+        </li>
+      )}
     </div>
   )
 }
