@@ -1,15 +1,12 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { connect } from 'react-redux'
 import Blog from './Blog'
 
-const BlogList = () => {
-  const anecdotes = useSelector(state => {
-    return state.blogs
-  })
-
+const BlogList = ({ blogs }) => {
   return (
     <div>
-      {anecdotes.map(blog =>
+      <h2>blogs</h2>
+      {blogs.map(blog =>
         <Blog
           key={blog.id}
           blog={blog}
@@ -19,4 +16,11 @@ const BlogList = () => {
   )
 }
 
-export default BlogList
+
+const mapStateToProps = (state) => {
+  return {
+    blogs: state.blogs,
+  }
+}
+
+export default connect(mapStateToProps)(BlogList)

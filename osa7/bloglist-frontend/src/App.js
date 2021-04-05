@@ -5,9 +5,15 @@ import AddBlog from './components/AddBlog'
 import LoggedInUser from './components/LoggedInUser'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
+import UserList from './components/UserList'
 import { useDispatch, connect } from 'react-redux'
 import { initBlogs } from './reducers/blogReducer'
 import { loginUserFromDS } from './reducers/userReducer'
+import {
+  BrowserRouter as Router,
+  Switch, Route
+} from 'react-router-dom'
+import { initUserList } from './reducers/userListReducer'
 
 const App = (props) => {
   const dispatch = useDispatch()
@@ -20,28 +26,37 @@ const App = (props) => {
     dispatch(loginUserFromDS())
   }, [])
 
+  useEffect(() => {
+    dispatch(initUserList())
+  }, [])
 
-  if (props.user===null) {
-    return (
-      <div>
-        <Notification />
-        <LoggedInUser />
+
+  return (
+    <div>
+      <Notification />
+      <LoggedInUser />
+      { (props.user===null) ? (
         <LoginForm/>
-      </div>
-    )
-  } else {
-    return (
-      <div>
-        <Notification />
-        <LoggedInUser />
-        <h2>blogs</h2>
-        <BlogList />
-        <Togglable buttonLabel='Add new blog'>
-          <AddBlog />
-        </Togglable>
-      </div>
-    )
-  }
+      ) : (
+        <div>
+          <Router>
+            <Switch>
+              <Route path="/users">
+                <UserList />
+              </Route>
+              <Route path="/">
+                <BlogList />
+                <Togglable buttonLabel='Add new blog'>
+                  <AddBlog />
+                </Togglable>
+              </Route>
+            </Switch>
+          </Router>
+        </div>
+      )
+      }
+    </div>
+  )
 }
 
 const mapStateToProps = (state) => {
