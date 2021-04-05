@@ -17,6 +17,7 @@ import {
   Switch, Route
 } from 'react-router-dom'
 import { initUserList } from './reducers/userListReducer'
+import Container from '@material-ui/core/Container'
 
 const App = (props) => {
   const dispatch = useDispatch()
@@ -35,7 +36,7 @@ const App = (props) => {
 
 
   return (
-    <div>
+    <Container>
       <Notification />
       <LoggedInUser />
       { (props.user===null) ? (
@@ -65,7 +66,7 @@ const App = (props) => {
         </div>
       )
       }
-    </div>
+    </Container>
   )
 }
 

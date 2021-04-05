@@ -1,41 +1,51 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
+import {
+  Table,
+  TableBody,
+  TableHead,
+  TableCell,
+  TableContainer,
+  TableRow,
+  Paper,
+  Typography
+} from '@material-ui/core'
 
 const UserListRow = ({ user }) => {
   return (
-    <tr>
-      <td>
+    <TableRow>
+      <TableCell>
         <Link to={`/users/${user.id}`}>
           {user.name}
         </Link>
-      </td>
-      <td>
+      </TableCell>
+      <TableCell>
         {user.blogs.length}
-      </td>
-    </tr>
+      </TableCell>
+    </TableRow>
   )
 }
 
 const UserList = ({ userList }) => {
   return (
     <div>
-      <h2>users</h2>
-      <table>
-        <thead>
-          <tr>
-            <th></th>
-            <th>blogs created</th>
-          </tr>
-        </thead>
-        <tbody>
-          {userList.map(user =>
-            <UserListRow
-              key={user.id}
-              user={user}
-            />)}
-        </tbody>
-      </table>
+      <Typography variant="h2">Users</Typography>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableCell></TableCell>
+            <TableCell>Blogs created</TableCell>
+          </TableHead>
+          <TableBody>
+            {userList.map(user =>
+              <UserListRow
+                key={user.id}
+                user={user}
+              />)}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   )
 }

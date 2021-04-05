@@ -1,14 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import {
+  Paper,
+  Typography
+} from '@material-ui/core'
 
 const Notification = (props) => {
-  const style = {
-    border: 'solid',
-    padding: 10,
-    borderWidth: 1
-  }
-  const successStyle = { ...style, borderColor: 'green' }
-  const errorStyle = { ...style, borderColor: 'red' }
 
   if(!props.notification) {
     return (
@@ -17,9 +14,11 @@ const Notification = (props) => {
     )
   } else {
     return (
-      <div style={props.notification.style==='error' ? errorStyle:successStyle}>
-        {props.notification.message}
-      </div>
+      <Paper variant="outlined" square>
+        <Typography variant="h6">
+          {props.notification.message}
+        </Typography>
+      </Paper>
     )
   }
 }

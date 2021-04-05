@@ -2,6 +2,10 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import BlogList from './BlogList'
+import {
+  Paper,
+  Typography
+} from '@material-ui/core'
 
 const UserDetails = ({ userList }) => {
   const id = useParams().id
@@ -10,10 +14,10 @@ const UserDetails = ({ userList }) => {
     return (<></>)
   }
   return (
-    <div>
-      <h2>{user.name}</h2>
+    <Paper>
+      <Typography variant="h2">{user.name}</Typography>
       <BlogList blogs={user.blogs} />
-    </div>
+    </Paper>
   )
 }
 
