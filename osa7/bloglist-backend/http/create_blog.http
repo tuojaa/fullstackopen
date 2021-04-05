@@ -1,0 +1,10 @@
+POST http://localhost:3003/api/blogs HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer token
+
+{
+    "title": "Lorem Ipsum 3",
+    "author": "A. Uthor",
+    "url": "https://example.com/blog/1234",
+    "likes": 12
+}
