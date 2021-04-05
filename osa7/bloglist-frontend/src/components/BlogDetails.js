@@ -1,7 +1,38 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useDispatch, connect } from 'react-redux'
 import { likeBlog, removeBlog } from '../reducers/blogReducer'
 import { useParams } from 'react-router-dom'
+import { addComment } from '../reducers/blogReducer'
+
+const AddComment = ({ blog }) => {
+  const dispatch = useDispatch()
+  const [comment, setComment] = useState('')
+
+  const handleSubmit = (event) => {
+    event.preventDefault()
+    dispatch(addComment(blog,comment))
+    setComment('')
+  }
+
+  return (
+    <div>
+      <h2>Add comment</h2>
+
+      <form onSubmit={handleSubmit}>
+        <div>
+          <input
+            id="comment"
+            value={comment}
+            onChange={({ target }) => setComment( target.value )}
+          />
+        </div>
+        <button
+          id="submit"
+          type="submit">add</button>
+      </form>
+    </div>
+  )
+}
 
 const BlogDetails = ({ blogs }) => {
   const id = useParams().id
@@ -44,6 +75,7 @@ const BlogDetails = ({ blogs }) => {
       </div>
       <button onClick={handleRemove}>remove</button>
       <h2>comments</h2>
+      <AddComment blog={blog} />
       {blog.comments.map(comment =>
         <li
           key={comment.id}

@@ -53,6 +53,23 @@ export const addBlog = (title, author, url) => {
   }
 }
 
+export const addComment = (blog, comment) => {
+  return async dispatch => {
+    try {
+      const result = await blogService.addComment(blog.id, comment)
+      blog.comments.push({ id: result.id, comment })
+      dispatch({
+        type: 'UPDATE_BLOG',
+        blog: blog
+      })
+      dispatch(notify('success', 'Added comment!'))
+    } catch(error) {
+      dispatch(notify('error', `Failed to add comment: ${error}`))
+    }
+  }
+}
+
+
 export const removeBlog = (blog) => {
   return async dispatch => {
     try {

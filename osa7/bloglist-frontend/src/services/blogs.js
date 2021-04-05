@@ -16,6 +16,10 @@ const getAll = () => {
   return request.then(response => response.data)
 }
 
+const addComment = (blog_id, comment) => {
+  return axios.post(`${baseUrl}/${blog_id}/comments`, { comment })
+}
+
 const createBlog = newBlog => {
   if(!token) throw new Error('Not authorized!')
   const config = {
@@ -49,7 +53,8 @@ const blogService = {
   clearToken,
   createBlog,
   updateBlog,
-  deleteBlog
+  deleteBlog,
+  addComment
 }
 
 export default blogService
