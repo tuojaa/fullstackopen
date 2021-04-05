@@ -2,6 +2,13 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { addBlog } from '../reducers/blogReducer'
 import { notify } from '../reducers/notificationReducer'
+import {
+  TextField,
+  Button,
+  Typography,
+  FormControl,
+  Grid
+} from '@material-ui/core'
 
 const AddBlog = () => {
   const dispatch = useDispatch()
@@ -21,37 +28,44 @@ const AddBlog = () => {
 
   return (
     <div>
-      <h2>Add new blog</h2>
+      <Typography variant="h2">
+        Add new blog
+      </Typography>
 
-      <form onSubmit={handleSubmit}>
-        <div>
-            title
-          <input
-            id="title"
-            value={title}
-            onChange={({ target }) => setTitle( target.value )}
-          />
-        </div>
-        <div>
-            author
-          <input
-            id="author"
-            value={author}
-            onChange={({ target }) => setAuthor( target.value )}
-          />
-        </div>
-        <div>
-            url
-          <input
-            id="url"
-            value={url}
-            onChange={({ target }) => setUrl( target.value )}
-          />
-        </div>
-        <button
-          id="submit"
-          type="submit">add</button>
-      </form>
+      <FormControl onSubmit={handleSubmit}>
+        <Grid container spacing={3}>
+          <Grid item xs={12}>
+            <TextField
+              label="Title"
+              id="title"
+              value={title}
+              onChange={({ target }) => setTitle( target.value )}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              label="Author"
+              id="author"
+              value={author}
+              onChange={({ target }) => setAuthor( target.value )}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              id="url"
+              label="URL"
+              value={url}
+              onChange={({ target }) => setUrl( target.value )}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Button
+              variant="contained" color="primary"
+              id="submit"
+              type="submit">Add</Button>
+          </Grid>
+        </Grid>
+      </FormControl>
     </div>
   )
 }
