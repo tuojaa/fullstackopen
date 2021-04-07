@@ -2,12 +2,22 @@ import React, { useState } from 'react'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
+import { 
+  ApolloClient, ApolloProvider, HttpLink, InMemoryCache
+} from '@apollo/client' 
+
+const client = new ApolloClient({
+  cache: new InMemoryCache(),
+  link: new HttpLink({
+    uri: 'http://localhost:4000',
+  })
+})
 
 const App = () => {
   const [page, setPage] = useState('authors')
 
   return (
-    <div>
+    <ApolloProvider client={client}>
       <div>
         <button onClick={() => setPage('authors')}>authors</button>
         <button onClick={() => setPage('books')}>books</button>
@@ -26,7 +36,7 @@ const App = () => {
         show={page === 'add'}
       />
 
-    </div>
+    </ApolloProvider>
   )
 }
 
