@@ -6,10 +6,13 @@ import Login from './components/Login'
 import Recommendations from './components/Recommendations'
 
 import { 
-  ApolloClient, ApolloProvider, HttpLink, InMemoryCache, useQuery
+  ApolloClient, ApolloProvider, HttpLink, InMemoryCache, useQuery, split
 } from '@apollo/client' 
 import { ME } from './queries'
 import { setContext } from 'apollo-link-context'
+
+import { getMainDefinition } from '@apollo/client/utilities'
+import { WebSocketLink } from '@apollo/client/link/ws'
 
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem('library-user-token')
@@ -23,16 +26,36 @@ const authLink = setContext((_, { headers }) => {
 
 const httpLink = new HttpLink({ uri: 'http://localhost:4000' })
 
+const wsLink = new WebSocketLink({
+  uri: 'ws://localhost:4000/graphql',
+  options: {
+    reconnect: true
+  }
+})
+
+const splitLink = split(
+  ({ query }) => {
+    const definition = getMainDefinition(query)
+    return (
+      definition.kind === 'OperationDefinition' &&
+      definition.operation === 'subscription'
+    )
+  },
+  wsLink,
+  authLink.concat(httpLink),
+)
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),
-  link: authLink.concat(httpLink)
+  link: splitLink
 })
+
 
 const App = () => {
   const [page, setPage] = useState('authors')
   const [token, setToken] = useState(null)
   const meResult = useQuery(ME, { client })
+
 
   useEffect(() => {
     const token = localStorage.getItem('library-user-token')

@@ -1,6 +1,6 @@
 import React from 'react'
-import { useQuery, useLazyQuery } from '@apollo/client'
-import { ALL_BOOKS, ME } from '../queries'
+import { useLazyQuery } from '@apollo/client'
+import { ALL_BOOKS } from '../queries'
 import BookList from './BookList'
 
 const Recommendations = (props) => {

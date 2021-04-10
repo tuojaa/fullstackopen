@@ -1,13 +1,19 @@
 
 import React, { useState, useEffect } from 'react'
-import { useLazyQuery, useQuery } from '@apollo/client'
-import { ALL_BOOKS, ALL_GENRES } from '../queries'
+import { useLazyQuery, useQuery, useSubscription } from '@apollo/client'
+import { ALL_BOOKS, ALL_GENRES, BOOK_ADDED } from '../queries'
 import BookList from './BookList'
 
 const Books = (props) => {  
   const [getBooks, { loading, data }] = useLazyQuery(ALL_BOOKS);
   const [genres, setGenres] = useState([])
   const genreResult = useQuery(ALL_GENRES)
+
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: (book) => {
+      alert(`Book added: ${book}`)
+    }
+  })
 
   useEffect( () => {    
     if(genreResult.loading) 
