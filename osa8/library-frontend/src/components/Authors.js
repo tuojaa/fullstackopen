@@ -21,6 +21,7 @@ const EditAuthor = ({ authors }) => {
       <div>
         name: 
         <select onChange={({ target }) => setAuthor(target.value)} value={author}>
+          <option>---</option>
           {authors.map(author => (
             <option key={author.name} value={author.name}>{author.name}</option>
           ))}
