@@ -77,8 +77,9 @@ const resolvers = {
     }
   },
   Author: {
-    bookCount: (root) => {
-      return 0
+    bookCount: async (root) => {
+      console.log("bookcount root: ", root)
+      return await bookCount(root.id)
     }
   },
   Mutation: {

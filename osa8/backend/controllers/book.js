@@ -6,8 +6,8 @@ const allBooks = async () => {
   return result
 }
 
-const bookCount = async () => {
-  const result = await Book.count()
+const bookCount = async (author) => {
+  const result = await Book.find({ author }).count()
   return result
 }
 
