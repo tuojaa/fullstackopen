@@ -1,4 +1,7 @@
-const calculateBmi = (height: number, weight: number): string => {
+export const calculateBmi = (height: number, weight: number): string => {
+  if((!height) || (!weight)) {
+    throw new Error('Must provide height and weight as numbers')
+  }
   const bmi = weight/((height/100)**2)
   if(bmi<15) 
     return 'Very severely underweight'
@@ -23,10 +26,7 @@ try {
   } else {
     const height: number = Number(process.argv[2])
     const weight: number = Number(process.argv[3])
-    
-    if((!height) || (!weight)) {
-      throw new Error('Must provide height and weight as numbers')
-    }
+   
   
     console.log(calculateBmi(height, weight))  
   }      
