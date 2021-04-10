@@ -1,7 +1,15 @@
 const Book = require('../models/book')
 
-const allBooks = async () => {
-  const result = await Book.find({}).populate("author")
+const allBooks = async (args) => {  
+  console.log("allBooks args: ", args)
+  let params = {}
+  if (args.author) {
+    params['author'] = args.author
+  } 
+  if (args.genre) {
+    params['genres'] = args.genre
+  }
+  const result = await Book.find(params).populate("author")
   console.log("allBooks: ", result)
   return result
 }

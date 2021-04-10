@@ -3,10 +3,12 @@ import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
 import Login from './components/Login'
-import { 
-  ApolloClient, ApolloProvider, HttpLink, InMemoryCache
-} from '@apollo/client' 
+import Recommendations from './components/Recommendations'
 
+import { 
+  ApolloClient, ApolloProvider, HttpLink, InMemoryCache, useQuery
+} from '@apollo/client' 
+import { ME } from './queries'
 import { setContext } from 'apollo-link-context'
 
 const authLink = setContext((_, { headers }) => {
@@ -30,6 +32,7 @@ const client = new ApolloClient({
 const App = () => {
   const [page, setPage] = useState('authors')
   const [token, setToken] = useState(null)
+  const meResult = useQuery(ME, { client })
 
   useEffect(() => {
     const token = localStorage.getItem('library-user-token')
@@ -54,6 +57,7 @@ const App = () => {
               <button onClick={() => setPage('authors')}>authors</button>
               <button onClick={() => setPage('books')}>books</button>
               <button onClick={() => setPage('add')}>add book</button>
+              <button onClick={() => setPage('recommendations')}>recommendations</button>
               <button onClick={doLogout}>logout</button>  
             </div>
           ) : (
@@ -77,6 +81,11 @@ const App = () => {
         show={page === 'add'}
       />
 
+      <Recommendations
+        show={page === 'recommendations'}
+        user={meResult.data}
+      />
+  
       <Login
         doLogin={doLogin}
         show={page === 'login'}

@@ -68,11 +68,12 @@ const resolvers = {
     authorCount: async () => await authorCount(),
     bookCount: async () => await bookCount(),
     allBooks: async (root, args) => {
-      var result = await allBooks()
+      var result = await allBooks(args)
       return result
     },
     allAuthors: async () => await allAuthors(),
-    me: async (root, args, context) => {      
+    me: async (root, args, context) => {
+      console.log("me", context.currentUser)  
       return context.currentUser
     }
   },
