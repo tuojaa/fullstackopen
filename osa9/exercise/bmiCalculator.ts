@@ -17,4 +17,19 @@ const calculateBmi = (height: number, weight: number): string => {
   return 'Obese Class III (Very severely obese)'
 }
 
-console.log(calculateBmi(180, 74))
+try {
+  if (process.argv.length !== 4) {
+    throw new Error('Incorrect number of arguments')  
+  } else {
+    const height: number = Number(process.argv[2])
+    const weight: number = Number(process.argv[3])
+    
+    if((!height) || (!weight)) {
+      throw new Error('Must provide height and weight as numbers')
+    }
+  
+    console.log(calculateBmi(height, weight))  
+  }      
+} catch(error) {
+  console.error(error.message)
+}

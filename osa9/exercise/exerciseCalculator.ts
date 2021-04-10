@@ -48,4 +48,13 @@ const calculateExercises = (dailyExerciseHours: Array<number>, target: number): 
   return result
 }
 
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2))
+try {
+  if(process.argv.length < 4) {
+    throw new Error('Insufficient number of arguments')
+  }
+  const target : number = Number(process.argv[2])
+  const dailyExerciseHours : Array<number> = process.argv.slice(3).map((arg) => Number(arg))
+  console.log(calculateExercises(dailyExerciseHours, target))
+} catch(error) {
+  console.error(error.message)
+}
