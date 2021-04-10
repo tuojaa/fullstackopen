@@ -26,11 +26,9 @@ const getOrCreateAuthor = async (name) => {
 
 const editAuthor = async (name, setBornTo) => {
   const author = await getAuthorByName(name)
-  console.log("editAuthor query: ", name, author)
   if(!author)
     return null
   const result = await Author.findByIdAndUpdate( author._id, { name, born: setBornTo } )
-  console.log("editAuthor result: ", result)
   return result
 }
 
