@@ -95,20 +95,13 @@ const resolvers = {
       const authorName = args.author
       try {
         const author = await getOrCreateAuthor(authorName)
-      } catch (error) {
-        throw new UserInputError(error.message, {
-          invalidArgs: { authorName },
-        })
-      }
-      try {
         const result = await addBook({ ...args, author })
+        return result
       } catch (error) {
         throw new UserInputError(error.message, {
           invalidArgs: args,
         })
       }
-      
-      return result
     },
     editAuthor: async (root, args) => {      
       if(!context.currentUser) {
@@ -137,7 +130,6 @@ const server = new ApolloServer({
   resolvers,
   context: async ({ req }) => {
     const auth = req ? req.headers.authorization : null
-    console.log("auth: ", auth)
     if (auth && auth.toLowerCase().startsWith('bearer ')) {
       const token = auth.substring(7)      
       try {

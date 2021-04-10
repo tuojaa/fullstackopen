@@ -28,10 +28,10 @@ const login = async (username, password) => {
 const getUserByToken = async (token) => {
   try {
     const decodedToken = jwt.verify(token, config.SECRET)
+    return await User.findById(decodedToken.id)
   } catch(error) {
     return null
   }  
-  return await User.findById(decodedToken.id)
 }
 
 module.exports = {
