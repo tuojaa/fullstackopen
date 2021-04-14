@@ -1,0 +1,10 @@
+POST http://localhost:3001/api/patients HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "Paavo Pesusieni",
+    "dateOfBirth": "1933-07-09",
+    "ssn": "111033-122X",
+    "gender": 33,
+    "occupation": "Mushroom Man"
+}

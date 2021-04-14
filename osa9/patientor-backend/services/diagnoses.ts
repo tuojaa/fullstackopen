@@ -6,6 +6,8 @@ export interface Diagnose {
     latin?: string
 }
 
+const diagnoses = diagnoses_data as Array<Diagnose>;
+
 export const getDiagnoses = () => {
-    return diagnoses_data as Array<Diagnose>;
+    return diagnoses;
 };
