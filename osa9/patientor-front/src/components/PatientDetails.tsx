@@ -1,10 +1,11 @@
-import axios from 'axios';
 import React, { useEffect } from 'react';
+import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { setPatientDetails, useStateValue } from '../state';
 import { Patient } from '../types';
 import { apiBaseUrl } from "../constants";
 import { Icon } from 'semantic-ui-react';
+import Entry from './Entry';
 
 interface PatientParams {
   id: string
@@ -52,6 +53,8 @@ const PatientDetails = () => {
       
       <p>ssn: {patient.ssn}</p>
       <p>dob: {patient.dateOfBirth}</p>
+      <h3>Entries</h3>
+      {patient.entries?.map(entry => (<Entry key={entry.id} entry={entry} />))}
     </div>
   );
 };
