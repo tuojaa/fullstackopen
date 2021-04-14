@@ -5,7 +5,7 @@ const Total = ({parts} : { parts: Array<CoursePart> }) => {
   const total = parts.reduce((carry, part) => carry + part.exerciseCount, 0);
   return (
     <div>
-      Number of exercises {total}
+      Total number of exercises {total}
     </div>
   )
 };
