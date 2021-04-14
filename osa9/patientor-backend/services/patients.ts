@@ -1,29 +1,7 @@
 import {v1 as uuid} from 'uuid';
 import patients_data from '../data/patients.json';
+import { Gender, Patient, PublicPatient } from '../types';
 import { isDate, isString } from './base';
-
-export enum Gender {
-    Male = 'male',
-    Female = 'female',
-    Other = 'other'
-}
-
-export interface Patient {
-    id: string,
-    name: string,
-    dateOfBirth: string,
-    ssn: string,
-    gender: Gender,
-    occupation: string
-}
-
-export interface NonSensitivePatient {
-    id: string,
-    name: string,
-    dateOfBirth: string,
-    gender: Gender,
-    occupation: string
-}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const isGender = (param: any): param is Gender => {
@@ -32,9 +10,15 @@ const isGender = (param: any): param is Gender => {
 
 const patients = patients_data as Array<Patient>;
 
-export const getNonSensitivePatients = (): Array<NonSensitivePatient> => {
-    return patients.map(({ id, name, dateOfBirth, gender, occupation }): NonSensitivePatient => {
+export const getNonSensitivePatients = (): Array<PublicPatient> => {
+    return patients.map(({ id, name, dateOfBirth, gender, occupation }): PublicPatient => {
         return { id, name, dateOfBirth, gender, occupation };
+    });
+};
+
+export const getPatientById = (id : string) : Patient | undefined => {
+    return patients.find(patient => {
+        return patient.id === id;
     });
 };
 
@@ -80,6 +64,7 @@ export const toNewPatient = ({ ssn, name, dateOfBirth, gender, occupation }: Fie
     const id: string = uuid();
     const newPatient: Patient = {
         id,
+        entries: [], 
         name: parseName(name),
         dateOfBirth: parseDateOfBirth(dateOfBirth),
         ssn: parseSsn(ssn),

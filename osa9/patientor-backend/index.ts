@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 
 import { getDiagnoses } from './services/diagnoses';
-import { getNonSensitivePatients, addPatient } from './services/patients';
+import { getNonSensitivePatients, addPatient, getPatientById } from './services/patients';
 
 const app = express();
 app.use(express.json());
@@ -19,6 +19,11 @@ app.get('/api/diagnoses', (_req, res) => {
 app.get('/api/patients', (_req, res) => {
     res.json(getNonSensitivePatients());
 });
+
+app.get('/api/patients/:id', (req, res) => {
+  res.json(getPatientById(req.params.id));
+});
+
 
 app.post('/api/patients', (req, res) => {
   try {
