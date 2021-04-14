@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useStateValue } from '../state';
+import { setPatientDetails, useStateValue } from '../state';
 import { Patient } from '../types';
 import { apiBaseUrl } from "../constants";
 import { Icon } from 'semantic-ui-react';
@@ -18,7 +18,6 @@ const PatientDetails = () => {
   useEffect(() => {
     if(patients[id] && patients[id].ssn) 
       return;
-    console.log("trying to fetch");
     const getDetails = async () => {
       const { data: patientDetailsFromApi } = await axios.get<Patient>(
         `${apiBaseUrl}/patients/${id}`
@@ -27,8 +26,7 @@ const PatientDetails = () => {
     };
     getDetails()
       .then(patientDetailsFromApi => {
-        console.log("trying to fetch");
-        dispatch({ type: "SET_PATIENT_DETAILS", payload: patientDetailsFromApi });  
+        dispatch(setPatientDetails(patientDetailsFromApi));  
       })
       .catch(error => {
         console.error(error);
