@@ -5,6 +5,6 @@ Content-Type: application/json
     "name": "Paavo Pesusieni",
     "dateOfBirth": "1933-07-09",
     "ssn": "111033-122X",
-    "gender": 33,
+    "gender": "other",
     "occupation": "Mushroom Man"
 }
