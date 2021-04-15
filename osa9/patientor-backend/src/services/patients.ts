@@ -95,14 +95,18 @@ const parseCriteria = (criteria: unknown) : string => parseString(criteria, 'cri
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const isHealthCheckRating = (param: any): param is HealthCheckRating => {
-    return Object.values(HealthCheckRating).includes(param);
+    return Object.values(HealthCheckRating).includes(Number(param));
 };
 
+const isNumber = (param: any): param is number => {
+    return !isNaN(Number(param));
+}
+
 const parseHealthCheckRating = (healthCheckRating: unknown): HealthCheckRating => {
-    if(!healthCheckRating || !isHealthCheckRating(healthCheckRating)) {
+    if(!healthCheckRating || !isNumber(healthCheckRating) || !isHealthCheckRating(healthCheckRating)) {
         throw new Error("Incorrect or missing health check rating");
     }
-    return healthCheckRating;
+    return Number(healthCheckRating);
 };
 
 const parseDiagnosisCodes = (diagnosisCodes: Array<string> | undefined): Array<Diagnosis['code']> => {
